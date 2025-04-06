@@ -1,33 +1,89 @@
 "use client";
 
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
 
 export default function DietGenPage() {
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const router = useRouter();
+
+  const handleLogout = () => {
+    document.cookie = 'auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
+    router.push('/login');
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
-      {/* HEADER com novo background */}
-      <header className="bg-gradient-to-r from-emerald-50 via-white to-green-50 py-6 shadow-xl flex flex-col items-center border-b-2 border-emerald-100">
-        {/* Logo grande centralizada */}
-        <Image
-          src="/logo.png"
-          alt="DietHub Logo"
-          width={300}
-          height={300}
-          className="object-contain mb-2"
-          priority
-        />
+      {/* Header */}
+      <header className="bg-white shadow-md py-4 px-6 flex justify-between items-center">
+        {/* Logo à esquerda */}
+        <div className="flex items-center">
+          <Image
+            src="/logo.png"
+            alt="DietHub Logo"
+            width={200}
+            height={200}
+            className="mr-3"
+          />
+        </div>
 
         {/* Navegação centralizada */}
-        <nav className="flex gap-10 font-medium text-black text-lg">
-          <Link href="/" className="hover:text-green-600 transition">Home</Link>
-          <Link href="/planos" className="hover:text-green-600 transition">Planos</Link>
-          <Link href="/contato" className="hover:text-green-600 transition">Contato</Link>
-          <Link href="/dietgen" className="hover:text-green-600 transition">DietGen</Link>
+        <nav className="flex gap-6">
+          <Link href="/homePage" className="text-green-600 font-medium hover:underline">
+            Home
+          </Link>
+          <Link href="/planos" className="text-green-600 font-medium hover:underline">
+            Planos
+          </Link>
+          <Link href="/dietgen" className="text-green-600 font-medium hover:underline">
+            DietGen
+          </Link>
         </nav>
+
+        {/* Botão de perfil à direita */}
+        <div className="relative">
+          <button
+            onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+            className="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-green-700 transition"
+          >
+            Perfil
+          </button>
+
+          {/* Mini modal do perfil */}
+          {isProfileMenuOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg z-50">
+              <ul className="py-2">
+                <li>
+                  <Link
+                    href="/configuracoes"
+                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  >
+                    Configurações
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/meu-plano"
+                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  >
+                    Meu Plano
+                  </Link>
+                </li>
+                <li>
+                  <button
+                    onClick={handleLogout}
+                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  >
+                    Sair
+                  </button>
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
       </header>
 
       <main className="container mx-auto py-12 px-4">
