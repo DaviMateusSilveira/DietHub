@@ -4,89 +4,37 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+// Importação do componente Header compartilhado
+import Header from '@/components/Header';
 
 export default function DietGenPage() {
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const handleLogout = () => {
-    document.cookie = 'auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
-    router.push('/login');
-  };
+  useEffect(() => {
+    const authCookie = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith('auth='))
+      ?.split('=')[1];
+
+    if (authCookie === 'true') {
+      setIsAuthenticated(true);
+    } else {
+      router.push('/login');
+    }
+  }, [router]);
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
-      {/* Header */}
-      <header className="bg-white shadow-md py-4 px-6 flex justify-between items-center">
-        {/* Logo à esquerda */}
-        <div className="flex items-center">
-          <Image
-            src="/logo.png"
-            alt="DietHub Logo"
-            width={200}
-            height={200}
-            className="mr-3"
-          />
-        </div>
+      {/* Usando o componente Header compartilhado */}
+      <Header />
 
-        {/* Navegação centralizada */}
-        <nav className="flex gap-6">
-          <Link href="/homePage" className="text-green-600 font-medium hover:underline">
-            Home
-          </Link>
-          <Link href="/planos" className="text-green-600 font-medium hover:underline">
-            Planos
-          </Link>
-          <Link href="/dietgen" className="text-green-600 font-medium hover:underline">
-            DietGen
-          </Link>
-        </nav>
-
-        {/* Botão de perfil à direita */}
-        <div className="relative">
-          <button
-            onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-            className="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-green-700 transition"
-          >
-            Perfil
-          </button>
-
-          {/* Mini modal do perfil */}
-          {isProfileMenuOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg z-50">
-              <ul className="py-2">
-                <li>
-                  <Link
-                    href="/configuracoes"
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    Configurações
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/meu-plano"
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    Meu Plano
-                  </Link>
-                </li>
-                <li>
-                  <button
-                    onClick={handleLogout}
-                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    Sair
-                  </button>
-                </li>
-              </ul>
-            </div>
-          )}
-        </div>
-      </header>
-
-      <main className="container mx-auto py-12 px-4">
+      <main className="container mx-auto py-24 px-4">
         <h1 className="text-4xl font-bold text-black mb-8 text-center">
           Diet Gen - Crie sua dieta personalizada
         </h1>
