@@ -2,10 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import Link from 'next/link';
-// Importação do componente Header compartilhado
-import Header from '@/components/Header';
 
 export default function DietGenPage() {
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -32,7 +28,6 @@ export default function DietGenPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
       {/* Usando o componente Header compartilhado */}
-      <Header />
 
       <main className="container mx-auto py-24 px-4">
         <h1 className="text-4xl font-bold text-black mb-8 text-center">
